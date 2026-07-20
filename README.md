@@ -2,6 +2,7 @@
 
 Live-music events platform for Jazz91's recurring monthly session. See `sec.md` for the product spec.
 
+
 ## Structure
 
 - `backend/` — Django + Django REST Framework API
