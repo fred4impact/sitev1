@@ -1,0 +1,35 @@
+# One Application per subfolder under deployment/apps/* (postgres, backend,
+# frontend). Update repoURL below to your own GitHub repo before applying —
+# ArgoCD needs to clone it, so this can't be a local-only path.
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: songroom-apps
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPO.git
+        revision: HEAD
+        directories:
+          - path: deployment/apps/*
+  template:
+    metadata:
+      name: "songroom-{{.path.basename}}"
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/YOUR_GITHUB_USERNAME/YOUR_REPO.git
+        targetRevision: HEAD
+        path: "{{.path.path}}"
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: songroom
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

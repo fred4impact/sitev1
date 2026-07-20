@@ -1,0 +1,12 @@
+# NEXT_PUBLIC_API_URL is baked into pages rendered for the browser, so it
+# must be the ingress host the browser can actually reach. API_URL is used
+# only for server-side (SSR) fetches inside the cluster, so it goes
+# straight to the backend Service via cluster DNS.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+data:
+  NEXT_PUBLIC_API_URL: "http://api.songroom.local"
+  API_URL: "http://backend.songroom.svc.cluster.local:8000"
+  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ""

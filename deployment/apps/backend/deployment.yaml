@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      initContainers:
+        - name: wait-for-postgres
+          image: postgres:16-alpine
+          command:
+            - sh
+            - -c
+            - until pg_isready -h postgres.songroom.svc.cluster.local -U songroom; do sleep 2; done
+      containers:
+        - name: backend
+          image: songroom-backend:local
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - -c
+            - python manage.py migrate && python manage.py runserver 0.0.0.0:8000
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: backend-config
+            - secretRef:
+                name: backend-secrets
+          readinessProbe:
+            httpGet:
+              path: /admin/login/
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /admin/login/
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 10
