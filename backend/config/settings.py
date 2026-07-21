@@ -20,6 +20,12 @@ DEBUG = env.bool("DEBUG", default=True)
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["localhost", "127.0.0.1"])
 
+# Railway (and most PaaS) terminate HTTPS at the edge and proxy to the app
+# over plain HTTP, signalling the original scheme via X-Forwarded-Proto.
+# Without this, request.is_secure() is always False, which breaks CSRF's
+# origin check for the admin (and secure cookies generally).
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 
 # Application definition
 
