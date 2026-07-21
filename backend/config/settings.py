@@ -119,6 +119,14 @@ STORAGES = {
     "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
 }
 
+# Jazzmin's base.html references the bare "vendor/bootswatch" directory (not
+# a real file) for its client-side theme-switcher JS. That can never have a
+# collectstatic manifest entry, so strict manifest lookups crash with
+# "Missing staticfiles manifest entry" on every admin page load. Relax to
+# non-strict so WhiteNoise falls back to a plain URL for that one reference;
+# real static files still get hashed, cache-busted URLs as normal.
+WHITENOISE_MANIFEST_STRICT = False
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 LOGGING = {
