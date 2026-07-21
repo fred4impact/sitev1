@@ -148,6 +148,10 @@ CORS_ALLOWED_ORIGINS = env.list(
     "CORS_ALLOWED_ORIGINS", default=["http://localhost:3000"]
 )
 
+CSRF_TRUSTED_ORIGINS = env.list(
+    "CSRF_TRUSTED_ORIGINS", default=[]
+)
+
 FRONTEND_URL = env("FRONTEND_URL", default="http://localhost:3000")
 
 # Stripe: if STRIPE_SECRET_KEY is unset, orders auto-complete without payment
