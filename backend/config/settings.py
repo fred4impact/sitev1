@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     "songs",
     "stories",
     "memberships",
-    "media",
     "comments",
     "notifications",
 ]
@@ -188,7 +187,6 @@ JAZZMIN_SETTINGS = {
         "songs",
         "stories",
         "memberships",
-        "media",
         "comments",
         "notifications",
         "auth",
