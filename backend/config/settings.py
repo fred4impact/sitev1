@@ -122,10 +122,14 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
+# Default storage for static and media files
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
     "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
 }
+
+# django-cloudinary-storage compatibility: provide the old setting name
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Railway's filesystem is ephemeral, so uploaded media doesn't survive a
 # redeploy unless it's stored off-instance. Cloudinary is optional in local
@@ -253,3 +257,4 @@ JAZZMIN_UI_TWEAKS = {
     "accent": "accent-warning",
     "no_navbar_border": True,
 }
+
