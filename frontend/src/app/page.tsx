@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { SponsorsSection } from "@/components/sponsors-section";
 import { serverFetch } from "@/lib/server-api";
-import type { EventSummary } from "@/lib/types";
+import type { EventSummary, SiteSettings } from "@/lib/types";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-GB", {
@@ -15,6 +16,7 @@ function formatDate(iso: string) {
 export default async function Home() {
   const upcoming = await serverFetch<EventSummary[]>("/api/events/?when=upcoming");
   const nextEvent = upcoming?.[0] ?? null;
+  const siteSettings = await serverFetch<SiteSettings>("/api/site-settings/");
 
   return (
     <div>
@@ -123,6 +125,8 @@ export default async function Home() {
           </p>
         </div>
       </section>
+
+      <SponsorsSection sponsors={siteSettings?.sponsors ?? []} />
     </div>
   );
 }

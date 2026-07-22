@@ -59,7 +59,10 @@ export function LineupItem({ entry }: { entry: LineupEntry }) {
       <CollapsibleContent className="h-[var(--collapsible-panel-height)] overflow-hidden transition-[height] duration-200 ease-out data-[starting-style]:h-0 data-[ending-style]:h-0">
         <div className="max-w-2xl space-y-2 pb-5 pl-[3.75rem]">
           {entry.artist.bio && (
-            <p className="text-sm text-muted-foreground">{entry.artist.bio}</p>
+            <div
+              className="space-y-2 text-sm text-muted-foreground [&_a]:text-primary [&_a]:underline"
+              dangerouslySetInnerHTML={{ __html: entry.artist.bio }}
+            />
           )}
           {entry.artist.instagram_handle && (
             <a

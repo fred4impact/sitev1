@@ -10,16 +10,21 @@ import {
 } from "@/components/ui/collapsible";
 import type { Artist } from "@/lib/types";
 
-function splitBio(bio: string) {
-  if (!bio) return { summary: "", rest: "" };
-  const match = bio.match(/^([\s\S]*?[.!?])\s+([\s\S]*)$/);
-  if (!match) return { summary: bio, rest: "" };
-  return { summary: match[1], rest: match[2] };
+// artist.bio is HTML (Quill output); strip tags for the always-visible teaser
+// sentence, then render the full formatted bio behind "Read more".
+function bioSummary(bioHtml: string) {
+  const plain = bioHtml
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!plain) return { summary: "", hasMore: false };
+  const match = plain.match(/^([\s\S]*?[.!?])\s+([\s\S]*)$/);
+  return { summary: match ? match[1] : plain, hasMore: Boolean(match?.[2]) };
 }
 
 export function ArtistCard({ artist }: { artist: Artist }) {
-  const { summary, rest } = splitBio(artist.bio);
-  const expandable = Boolean(rest || artist.instagram_handle);
+  const { summary, hasMore } = bioSummary(artist.bio);
+  const expandable = Boolean(hasMore || artist.instagram_handle);
 
   return (
     <Card className="overflow-hidden border-border/60 pt-0">
@@ -57,7 +62,12 @@ export function ArtistCard({ artist }: { artist: Artist }) {
             </CollapsibleTrigger>
             <CollapsibleContent className="h-[var(--collapsible-panel-height)] overflow-hidden transition-[height] duration-200 ease-out data-[starting-style]:h-0 data-[ending-style]:h-0">
               <div className="space-y-2 pt-2">
-                {rest && <p className="text-sm text-muted-foreground">{rest}</p>}
+                {hasMore && (
+                  <div
+                    className="space-y-2 text-sm text-muted-foreground [&_a]:text-primary [&_a]:underline"
+                    dangerouslySetInnerHTML={{ __html: artist.bio }}
+                  />
+                )}
                 {artist.instagram_handle && (
                   <a
                     href={`https://instagram.com/${artist.instagram_handle}`}

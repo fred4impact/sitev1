@@ -1,3 +1,4 @@
+from django_quill.drf.fields import QuillHtmlField
 from rest_framework import serializers
 
 from artists.serializers import LineupEntrySerializer
@@ -79,6 +80,7 @@ class EventListSerializer(serializers.ModelSerializer):
 
 
 class EventDetailSerializer(EventListSerializer):
+    description = QuillHtmlField(read_only=True)
     ticket_types = TicketTypeSerializer(many=True, read_only=True)
     lineup = LineupEntrySerializer(source="lineup_entries", many=True, read_only=True)
     photos = EventPhotoSerializer(many=True, read_only=True)
