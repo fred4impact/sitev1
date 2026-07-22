@@ -41,5 +41,4 @@ urlpatterns = [
     path('api/', include(router.urls)),
 ]
 
-# Always serve media files (both in DEBUG and production)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
