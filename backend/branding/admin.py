@@ -2,13 +2,31 @@ from django.contrib import admin
 from django.shortcuts import redirect
 from django.utils.html import format_html
 
-from .models import SiteSettings
+from .models import SiteSettings, Sponsor
+
+
+class SponsorInline(admin.TabularInline):
+    model = Sponsor
+    extra = 1
+    max_num = 4
+    readonly_fields = ("logo_preview",)
+    fields = ("logo", "logo_preview", "name", "website_url", "sort_order")
+
+    @admin.display(description="Preview")
+    def logo_preview(self, obj):
+        if not obj.pk or not obj.logo:
+            return ""
+        return format_html(
+            '<img src="{}" style="max-height: 60px; border-radius: 4px;" />',
+            obj.logo.url,
+        )
 
 
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
     readonly_fields = ("logo_preview",)
     fields = ("logo", "logo_preview")
+    inlines = [SponsorInline]
 
     @admin.display(description="Preview")
     def logo_preview(self, obj):

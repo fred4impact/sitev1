@@ -1,12 +1,13 @@
 from django.db import models
 from django.utils.text import slugify
+from django_quill.fields import QuillField
 
 
 class Artist(models.Model):
     name = models.CharField(max_length=200)
     slug = models.SlugField(max_length=220, unique=True, blank=True)
     role = models.CharField(max_length=120, blank=True)
-    bio = models.TextField(blank=True)
+    bio = QuillField(blank=True)
     photo = models.ImageField(upload_to="artists/photos/", blank=True)
     photo_url = models.URLField(
         blank=True, help_text="Only used if no photo is uploaded above."

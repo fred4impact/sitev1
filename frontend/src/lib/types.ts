@@ -1,5 +1,13 @@
+export type Sponsor = {
+  id: number;
+  name: string;
+  logo_url: string;
+  website_url: string;
+};
+
 export type SiteSettings = {
   logo_url: string;
+  sponsors: Sponsor[];
 };
 
 export type Venue = {

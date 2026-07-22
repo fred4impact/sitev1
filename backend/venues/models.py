@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from django_quill.fields import QuillField
 
 
 class Venue(models.Model):
@@ -8,7 +9,7 @@ class Venue(models.Model):
     address = models.CharField(max_length=255, blank=True)
     city = models.CharField(max_length=120, blank=True)
     capacity = models.PositiveIntegerField(default=0)
-    description = models.TextField(blank=True)
+    description = QuillField(blank=True)
     image_url = models.URLField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

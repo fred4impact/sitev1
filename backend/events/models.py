@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
+from django_quill.fields import QuillField
 
 from venues.models import Venue
 
@@ -14,7 +15,7 @@ class Event(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=220, unique=True, blank=True)
     venue = models.ForeignKey(Venue, on_delete=models.PROTECT, related_name="events")
-    description = models.TextField(blank=True)
+    description = QuillField(blank=True)
     start_at = models.DateTimeField()
     end_at = models.DateTimeField(null=True, blank=True)
     currency = models.CharField(max_length=3, default="GBP")

@@ -5,9 +5,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { LineupItem } from "@/components/lineup-item";
 import { PhotoSlider } from "@/components/photo-slider";
+import { SponsorsSection } from "@/components/sponsors-section";
 import { serverFetch } from "@/lib/server-api";
 import { getYouTubeEmbedUrl } from "@/lib/utils";
-import type { EventDetail } from "@/lib/types";
+import type { EventDetail, SiteSettings } from "@/lib/types";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-GB", {
@@ -27,6 +28,8 @@ export default async function EventDetailPage({
   const event = await serverFetch<EventDetail>(`/api/events/${slug}/`);
 
   if (!event) notFound();
+
+  const siteSettings = await serverFetch<SiteSettings>("/api/site-settings/");
 
   const embedUrl = getYouTubeEmbedUrl(event.video_url);
 
@@ -104,9 +107,10 @@ export default async function EventDetailPage({
         )}
 
         {event.description && (
-          <p className="mt-10 whitespace-pre-line text-left text-muted-foreground">
-            {event.description}
-          </p>
+          <div
+            className="mt-10 space-y-4 text-left text-muted-foreground [&_a]:text-primary [&_a]:underline [&_ol]:list-decimal [&_ol]:pl-6 [&_ul]:list-disc [&_ul]:pl-6"
+            dangerouslySetInnerHTML={{ __html: event.description }}
+          />
         )}
 
         {event.photos.length > 0 && (
@@ -155,6 +159,8 @@ export default async function EventDetailPage({
           </div>
         )}
       </div>
+
+      <SponsorsSection sponsors={siteSettings?.sponsors ?? []} />
     </div>
   );
 }
