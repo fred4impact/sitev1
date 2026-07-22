@@ -1,4 +1,3 @@
-from django_quill.drf.fields import QuillHtmlField
 from rest_framework import serializers
 
 from .models import Artist, EventLineup
@@ -6,7 +5,6 @@ from .models import Artist, EventLineup
 
 class ArtistSerializer(serializers.ModelSerializer):
     photo_url = serializers.SerializerMethodField()
-    bio = QuillHtmlField(read_only=True)
 
     class Meta:
         model = Artist

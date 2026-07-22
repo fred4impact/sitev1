@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "corsheaders",
-    "django_quill",
+    "ckeditor",
     # songroom apps
     "users",
     "events",
