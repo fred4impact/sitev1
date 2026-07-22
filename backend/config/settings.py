@@ -125,11 +125,11 @@ MEDIA_ROOT = BASE_DIR / "media"
 # Default storage for static and media files
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
-    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
+    "staticfiles": {"BACKEND": "config.storage.SilentCollectStaticStorage"},
 }
 
 # django-cloudinary-storage compatibility: provide the old setting name
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_STORAGE = "config.storage.SilentCollectStaticStorage"
 
 # Railway's filesystem is ephemeral, so uploaded media doesn't survive a
 # redeploy unless it's stored off-instance. Cloudinary is optional in local
@@ -154,6 +154,13 @@ if CLOUDINARY_CLOUD_NAME and CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET:
 # non-strict so WhiteNoise falls back to a plain URL for that one reference;
 # real static files still get hashed, cache-busted URLs as normal.
 WHITENOISE_MANIFEST_STRICT = False
+
+# With ManifestFilesMixin's default keep_intermediate_files=False, CSS/JS
+# files never get an unhashed copy saved to disk post-process. Without this,
+# WhiteNoise's compression pass still tries to compress those never-saved
+# unhashed names and crashes with FileNotFoundError. Restricting compression
+# to the hashed files that actually exist avoids that.
+WHITENOISE_KEEP_ONLY_HASHED_FILES = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
